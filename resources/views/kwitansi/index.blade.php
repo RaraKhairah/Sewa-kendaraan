@@ -1,60 +1,70 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Kwitansi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background: white">
+@extends('layouts.app')
 
-    <div class="container mt-5">
+@section('content')
+<section class="section">
+    <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div>
-                    <h3 class="text-center my-4">Data Penyewa</h3>
-                    <hr>
+            <div class="col-lg-12 margin-tb">
+                <div class="pull-left">
+                    <h2>Daftar Kwitansi</h2>
                 </div>
-                <div class="card border-0 shadow-sm rounded">
-                    <div class="card-body">
-                        <a href="{{route('kwitansi.create')}}" class="btn btn-md btn-info mb-3">TAMBAH</a>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID Kwitansi</th>
-                                    <th scope="col">Tanggal Kwitansi</th>
-                                    <th scope="col" style="width: 20%">ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($kwitansi as $key => $kwitansi)
-                                    <tr>
-                                        <td class="text-center">
-                                            {{ $kwitansi->id }}
-                                        </td>
-                                        <td>{{ $kwitansi->tgl_kwitansi }}</td>
-                                        <td class="text-center">
-                                            <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('kwitansi.destroy', $kwitansi->id) }}" method="POST">
-                                                <a href="{{ route('kwitansi.show', $kwitansi->id) }}" class="btn btn-sm btn-dark">SHOW</a>
-                                                <a href="{{ route('kwitansi.edit', $kwitansi->id) }}" class="btn btn-sm btn-primary">EDIT</a>
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <div class="alert alert-danger">
-                                        Data User Belum Ada.
-                                    </div>
-                                @endforelse
-                            </tbody>
-                        </table>
-                        {{-- {{ $user->links() }} --}}
-                    </div>
+                <div class="pull-right">
+                    <a class="btn btn-success rounded-circle" href="{{ route('kwitansi.create') }}" style="color: #ffffff; background-color: #28a745;">
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
                 </div>
             </div>
         </div>
+
+        <br>
+        @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+        @endif
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Data Kwitansi</h5>
+
+                <!-- Table with stripped rows -->
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>ID Kwitansi</th>
+                            <th>Tanggal Transaksi</th>
+                            <th width="280px">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($kwitansis as $kwitansi)
+                        <tr>
+                            <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ $kwitansi->id_kwitansi }}</td>
+                            <td>{{ $kwitansi->tgl_transaksi }}</td>
+                            <td>
+                                <form action="{{ route('kwitansi.destroy', $kwitansi->id_kwitansi) }}" method="POST">
+                                    <a class="btn btn-primary rounded-circle" href="{{ route('kwitansi.edit', $kwitansi->id_kwitansi) }}" style="color: #ffffff; background-color: #6776f4;">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-danger rounded-circle" style="color: #ffffff; background-color: #dc3545;">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+            </div>
+        </div>
+
     </div>
-</body>
-</html>
+</section>
+@endsection

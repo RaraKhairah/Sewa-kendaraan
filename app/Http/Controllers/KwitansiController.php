@@ -3,76 +3,67 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kwitansi;
-use Illuminate\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KwitansiController extends Controller
 {
-    public function show(string $id):View {
-
-        return view('kwitansi.profile',[
-        'kwitansi' => Kwitansi::findOrFail($id)
-        ]);
-    }
-
-    public function index(): View
+    public function index()
     {
-       $kwitansi = Kwitansi::latest()->paginate(10);
-       return view('kwitansi.index',compact('kwitansi'));
+        $kwitansis = Kwitansi::all();
+        return view('kwitansi.index', compact('kwitansis'));
     }
 
-    public function create(): View
+    public function create()
     {
         return view('kwitansi.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-       
-        //validate form
         $request->validate([
-            'tgl_kwitansi'      => 'required',
+            'tgl_transaksi' => 'required|date',
         ]);
 
-        Kwitansi::create([
-            'tgl_kwitansi'          => $request->tgl_kwitansi,
-            
-        ]);
-        //redirect to index
-        return redirect()->route('kwitansi.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        Kwitansi::create($request->all());
+
+        // Menggunakan SweetAlert untuk notifikasi
+        Alert::success('Success', 'Kwitansi berhasil ditambahkan');
+
+        return redirect()->route('kwitansi.index');
     }
 
-    public function edit(string $id): View
+    public function show(Kwitansi $kwitansi)
     {
-        $kwitansi = Kwitansi::findOrFail($id);
+        return view('kwitansi.show', compact('kwitansi'));
+    }
 
+    public function edit(Kwitansi $kwitansi)
+    {
         return view('kwitansi.edit', compact('kwitansi'));
     }
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request, Kwitansi $kwitansi)
     {
-        //validate form
         $request->validate([
-            'tgl_kwitansi'      => 'required',
-            
+            'tgl_transaksi' => 'required|date',
         ]);
 
-        $kwitansi = Kwitansi::findOrFail($id);
-        $kwitansi->update([
-                'tgl_kwitansi'  => $request->tgl_kwitansi,
-                
-            ]);
+        $kwitansi->update($request->all());
 
-        return redirect()->route('kwitansi.index')->with(['success' => 'Data Berhasil Diubah!']);
+        // Menggunakan SweetAlert untuk notifikasi
+        Alert::success('Success', 'Kwitansi berhasil diupdate');
+
+        return redirect()->route('kwitansi.index');
     }
 
-    public function destroy($id): RedirectResponse
+    public function destroy(Kwitansi $kwitansi)
     {
-        $pengguna = Kwitansi::findOrFail($id);
-        $pengguna->delete();
-        return redirect()->route('kwitansi.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        $kwitansi->delete();
+
+        // Menggunakan SweetAlert untuk notifikasi
+        Alert::success('Success', 'Kwitansi berhasil dihapus');
+
+        return redirect()->route('kwitansi.index');
     }
-
-
 }

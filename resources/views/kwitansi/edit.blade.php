@@ -1,51 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Kwitansi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background: white">
+@extends('layouts.app')
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div>
-                    <h3 class="text-center my-4">Edit Data Kwitansi</h3>
-                    <hr>
-                </div>
-                <div class="card border-0 shadow-sm rounded">
-                    <div class="card-body">
-                        <form action="{{route('kwitansi.update', $kwitansi->id)}}" method="POST" >
-                          @csrf
-                          @method('PUT')
+@section('content')
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-lg-12 d-flex justify-content-between align-items-center">
+            <h2>Edit Kwitansi</h2>
+            <a class="btn btn-primary" href="{{ route('kwitansi.index') }}">Kembali</a>
+        </div>
+    </div>
 
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Tanggal kwitansi</label>
-                                <input type="date" name="tgl_kwitansi" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ old('tgl_kwitansi', $kwitansi->tgl_kwitansi) }}" >
-                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                                @error('tgl_kwitansi')
-                                <div class="alert alert-danger mt-2">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                              </div>
-                              <br/>
-                              <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                              </div>
-                          </form>
-           
-                        
-                        {{-- {{ $user->links() }} --}}
-                    </div>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> Ada beberapa masalah dengan input Anda.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Form Edit Kwitansi</h5>
+
+                    <!-- Vertical Form -->
+                    <form action="{{ route('kwitansi.update', $kwitansi->id_kwitansi) }}" method="POST" class="row g-3">
+                        @csrf
+                        @method('PUT')
+                        <div class="col-12">
+                            <label for="tgl_transaksi" class="form-label"><strong>Tanggal Transaksi:</strong></label>
+                            <input type="date" name="tgl_transaksi" value="{{ $kwitansi->tgl_transaksi }}" class="form-control" id="tgl_transaksi" placeholder="Tanggal Transaksi">
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="reset" class="btn btn-secondary">Reset</button>
+                        </div>
+                    </form>
+                    <!-- Vertical Form -->
+
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
-
-
+</div>
+@endsection

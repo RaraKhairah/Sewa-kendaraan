@@ -2,99 +2,78 @@
 
 namespace App\Http\Controllers;
 
-
-use Illuminate\View\View;
 use App\Models\Kendaraan;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KendaraanController extends Controller
 {
-    public function index(): View
+    public function index()
     {
-       $kendaraan = Kendaraan::latest()->paginate(10);
-    //    dd($kendaraan);
-       return view('kendaraan.index',compact('kendaraan'));
-    }
-   
-    public function show(string $id):View {
-
-        return view('kendaraan.profile',[
-        'kwitansi' => Kendaraan::findOrFail($id)
-        ]);
+        $kendaraans = Kendaraan::all();
+        return view('kendaraan.index', compact('kendaraans'));
     }
 
-    public function create(): View
+    public function create()
     {
         return view('kendaraan.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-       
-        // //validate form
         $request->validate([
-            'no_mesin'    => 'required',
-            'jenis_mobil'  => 'required',
-            'nama_mobil'   => 'required',
-            'merk'         => "required",
-            'kapasitas'    => 'required',
-            'tarif'        => 'required',
-            
+            'no_pol' => 'required|max:10',
+            'no_mesin' => 'required|max:20',
+            'jenis_mobil' => 'required',
+            'nama_mobil' => 'required|max:40',
+            'merek' => 'required',
+            'kapasitas' => 'required|max:5',
         ]);
-        Kendaraan::create([
-            'no_mesin'        => $request->no_mesin,
-            'jenis_mobil'     => $request->jenis_mobil,
-            'nama_mobil'      => $request->nama_mobil,
-            'merk'            => $request->merk,
-            'kapasitas'       => $request->kapasitas,
-            'tarif'           => $request->tarif,
-            
-            
-        ]);
-        return redirect()->route('kendaraan.index')->with(['success' => 'Data Berhasil Disimpan!']);
 
+        Kendaraan::create($request->all());
+
+        // Menggunakan SweetAlert untuk notifikasi
+        Alert::success('Success', 'Kendaraan berhasil ditambahkan');
+
+        return redirect()->route('kendaraan.index');
     }
-    public function destroy(){
-        
-    }
-    public function edit(string $id): View
+
+    public function show(Kendaraan $kendaraan)
     {
-        $kendaraan = Kendaraan::findOrFail($id);
+        return view('kendaraan.show', compact('kendaraan'));
+    }
 
+    public function edit(Kendaraan $kendaraan)
+    {
         return view('kendaraan.edit', compact('kendaraan'));
     }
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request, Kendaraan $kendaraan)
     {
-        //validate form
         $request->validate([
-            'no_mesin'    => 'required',
-            'jenis_mobil'  => 'required',
-            'nama_mobil'   => 'required',
-            'merk'         => "required",
-            'kapasitas'    => 'required',
-            'tarif'        => 'required',
-            
+            'no_pol' => 'required|max:10',
+            'no_mesin' => 'required|max:20',
+            'jenis_mobil' => 'required',
+            'nama_mobil' => 'required|max:40',
+            'merek' => 'required',
+            'kapasitas' => 'required|max:5',
         ]);
 
-        $kendaraan = Kendaraan::findOrFail($id);
-        $kendaraan->update([
-            'no_mesin'        => $request->no_mesin,
-            'jenis_mobil'     => $request->jenis_mobil,
-            'nama_mobil'      => $request->nama_mobil,
-            'merk'            => $request->merk,
-            'kapasitas'       => $request->kapasitas,
-            'tarif'           => $request->tarif,
-                
-            ]);
+        $kendaraan->update($request->all());
 
-        return redirect()->route('kendaraan.index')->with(['success' => 'Data Berhasil Diubah!']);
+        // Menggunakan SweetAlert untuk notifikasi
+        Alert::success('Success', 'Kendaraan berhasil diupdate');
+
+        return redirect()->route('kendaraan.index');
     }
-    
 
-   
+    public function destroy(Kendaraan $kendaraan)
+    {
+        $kendaraan->delete();
+
+        // Menggunakan SweetAlert untuk notifikasi
+        Alert::success('Success', 'Kendaraan berhasil dihapus');
+
+        return redirect()->route('kendaraan.index');
+    }
 }
-
-

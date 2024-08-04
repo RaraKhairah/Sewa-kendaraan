@@ -10,9 +10,19 @@ class Kwitansi extends Model
     use HasFactory;
 
     protected $table = 'kwitansi';
+    protected $primaryKey = 'id_kwitansi';
 
     protected $fillable = [
-        'tgl_kwitansi',
-
+        'tgl_transaksi',
     ];
+
+    public function sewa()
+    {
+        return $this->hasMany(Sewa::class, 'id_kwitansi');
+    }
+
+    public function invoice()
+    {
+        return $this->hasMany(Invoice::class, 'id_kwitansi');
+    }
 }

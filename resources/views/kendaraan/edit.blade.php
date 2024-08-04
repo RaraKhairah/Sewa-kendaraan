@@ -1,98 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Kwitansi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background: white">
+@extends('layouts.app')
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div>
-                    <h3 class="text-center my-4">Edit Data Kendaraan</h3>
-                    <hr>
+@section('content')
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-lg-12 d-flex justify-content-between align-items-center">
+            <h2>Edit Kendaraan</h2>
+            <a class="btn btn-primary" href="{{ route('kendaraan.index') }}">Kembali</a>
+        </div>
+    </div>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> Ada beberapa masalah dengan input Anda.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Form Edit Kendaraan</h5>
+
+                    <!-- Vertical Form -->
+                    <form action="{{ route('kendaraan.update', $kendaraan->no_pol) }}" method="POST" class="row g-3">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="col-12">
+                            <label for="no_pol" class="form-label"><strong>No Polisi:</strong></label>
+                            <input type="text" name="no_pol" value="{{ $kendaraan->no_pol }}" class="form-control" id="no_pol" placeholder="No Polisi">
+                        </div>
+                        <div class="col-12">
+                            <label for="no_mesin" class="form-label"><strong>No Mesin:</strong></label>
+                            <input type="text" name="no_mesin" value="{{ $kendaraan->no_mesin }}" class="form-control" id="no_mesin" placeholder="No Mesin">
+                        </div>
+                        <div class="col-12">
+                            <label for="jenis_mobil" class="form-label"><strong>Jenis Mobil:</strong></label>
+                            <select name="jenis_mobil" class="form-control" id="jenis_mobil">
+                                <option value="mpv" {{ $kendaraan->jenis_mobil == 'mpv' ? 'selected' : '' }}>MPV</option>
+                                <option value="city" {{ $kendaraan->jenis_mobil == 'city' ? 'selected' : '' }}>City</option>
+                                <option value="suv" {{ $kendaraan->jenis_mobil == 'suv' ? 'selected' : '' }}>SUV</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="nama_mobil" class="form-label"><strong>Nama Mobil:</strong></label>
+                            <input type="text" name="nama_mobil" value="{{ $kendaraan->nama_mobil }}" class="form-control" id="nama_mobil" placeholder="Nama Mobil">
+                        </div>
+                        <div class="col-12">
+                            <label for="merek" class="form-label"><strong>Merek:</strong></label>
+                            <select name="merek" class="form-control" id="merek">
+                                <option value="honda" {{ $kendaraan->merek == 'honda' ? 'selected' : '' }}>Honda</option>
+                                <option value="toyota" {{ $kendaraan->merek == 'toyota' ? 'selected' : '' }}>Toyota</option>
+                                <option value="daihatsu" {{ $kendaraan->merek == 'daihatsu' ? 'selected' : '' }}>Daihatsu</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="kapasitas" class="form-label"><strong>Kapasitas:</strong></label>
+                            <input type="text" name="kapasitas" value="{{ $kendaraan->kapasitas }}" class="form-control" id="kapasitas" placeholder="Kapasitas">
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                    <!-- Vertical Form -->
+
                 </div>
-                <div class="card border-0 shadow-sm rounded">
-                    <div class="card-body">
-                        <form action="{{ route('kendaraan.update', $kendaraan->no_pol) }}" method="POST" >
-                          @csrf
-                          @method('PUT')
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">No Mesin</label>
-                            <input type="number" name="no_mesin" class="form-control" value="{{$kendaraan->no_mesin}}" id="exampleInputEmail1" aria-describedby="emailHelp" >
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                            @error('no_mesin')
-                            <div class="alert alert-danger mt-2">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                          </div>
-                          
-                          <div class="form-group">
-                              <label for="exampleFormControlSelect1">JENIS</label>
-                              <select class="form-control" name="jenis_mobil"  id="exampleFormControlSelect1">
-                                <option value="{{ old('level', $kendaraan->jenis_mobil) }}"> {{ old('level', $kendaraan->jenis_mobil) }} </option>
-                                <option value="mpv">mpv</option>
-                                <option value="city">city</option>
-                                <option value="suv">suv</option>
-                               </select>
-                               @error('level')
-                               <div class="alert alert-danger mt-2">
-                                   {{ $message }}
-                               </div>
-                               @enderror
-                            </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputEmail">Nama Mobil</label>
-                        <input type="text" value="{{$kendaraan->nama_mobil}}" name="nama_mobil" class="form-control" id="exampleInputEmail" >
-                        @error('nama_mobil')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                      </div>
-                      <label for="exampleFormControlSelect1">MERK</label>
-                      <select class="form-control" name="merk" id="exampleFormControlSelect1">
-                        <option value="{{ old('level', $kendaraan->merk) }}"> {{ old('level', $kendaraan->merk) }} </option>
-                        <option value="honda">honda</option>
-                        <option value="toyota">toyota</option>
-                        <option value="daihatsu">daihatsu</option>
-                       </select>
-                       @error('level')
-                       <div class="alert alert-danger mt-2">
-                           {{ $message }}
-                       </div>
-                       @enderror
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail">Kapasitas</label>
-                      <input type="text" name="kapasitas" class="form-control" value="{{$kendaraan->kapasitas}}" id="exampleInputEmail" >
-                      @error('kapasitas')
-                      <div class="alert alert-danger mt-2">
-                          {{ $message }}
-                      </div>
-                      @enderror
-                    </div>
-                      <div class="form-group">
-                        <label for="exampleInputEmail">Tarif</label>
-                        <input type="number" name="tarif" class="form-control"  value="{{$kendaraan->tarif}}"id="exampleInputEmail" >
-                        @error('tarif')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                      </div>
-                      <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
-                  </form>
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+@endsection
