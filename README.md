@@ -1,1 +1,5 @@
 ![alt text](Penyewa.JPG?raw=true)
+![alt text](DaftarKendaraan.JPG?raw=true)
+![alt text](Invoice.JPG?raw=true)
+![alt text](Kwitansi.JPG?raw=true)
+![alt text](Sewa.JPG?raw=true)
