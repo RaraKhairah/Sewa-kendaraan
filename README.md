@@ -1,1 +1,1 @@
-![alt text] (https://drive.google.com/file/d/1grl1ZybZ8zJyhKxBXdieNo8flrzyw1Hv)
+![alt text] (https://github.com/RaraKhairah/Sewa-kendaraan/blob/main/Penyewa.JPG?raw=true)
